@@ -342,37 +342,25 @@
             container.appendChild(historyDiv);
         }
 
-        checkInForm.addEventListener('submit', async (e) => {
+        checkInForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const checkInData = {
                 timestamp: new Date(),
                 focusMinutes: document.getElementById('focus').value,
                 energy: document.getElementById('energy').value,
                 emotion: document.getElementById('emotion').value,
-                timeSpent: `${document.getElementById('timeHours').value || 0}:${document.getElementById('timeMinutes').value || 0}`,
-                userId: 'user123' // You'd need proper user authentication
+                timeSpent: `${document.getElementById('timeHours').value || 0}:${document.getElementById('timeMinutes').value || 0}`
             };
 
-            try {
-                const response = await fetch('http://localhost:3000/api/checkin', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(checkInData)
-                });
-
-                if (response.ok) {
-                    checkInForm.reset();
-                    alert('Check-in saved successfully!');
-                } else {
-                    alert('Failed to save check-in');
-                }
-            } catch (error) {
-                alert('Error saving check-in');
-                console.error(error);
-            }
+            // Save to localStorage
+            saveCheckIn(checkInData);
+            
+            checkInForm.reset();
+            alert('Check-in saved successfully!');
         });
+
+        // Make sure to call this function to add the history button
+        addHistorySection();
     </script>
 </body>
 </html> 
