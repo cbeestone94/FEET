@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Your FEET</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #2c3e50;
+        }
+
+        .container {
+            text-align: center;
+            padding: 3rem;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            font-size: 2.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            color: #7f8c9a;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #e1e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #93a5cf;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(147, 165, 207, 0.1);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        button {
+            background-color: #93a5cf;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            max-width: 200px;
+            margin: 0 auto;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        button:hover {
+            background-color: #7891c9;
+            transform: translateY(-1px);
+        }
+
+        #stopButton {
+            background-color: #e74c3c;
+            display: none;
+        }
+
+        #stopButton:hover {
+            background-color: #c0392b;
+        }
+
+        #checkInForm {
+            display: none;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e1e8f0;
+        }
+
+        .rating-label {
+            display: inline-block;
+            margin-left: 0.5rem;
+            color: #7f8c9a;
+            font-size: 0.9rem;
+        }
+
+        .timer {
+            font-size: 1.1rem;
+            color: #7f8c9a;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .time-inputs {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .time-inputs input {
+            width: 100px;
+        }
+
+        button[type="submit"] {
+            background-color: #93a5cf;
+            margin-top: 1rem;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #7891c9;
+        }
+
+        .history-button {
+            background-color: #93a5cf;
+            margin-top: 1rem;
+        }
+        
+        .history {
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .history-item {
+            background: #f8fafc;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            border: 1px solid #e1e8f0;
+        }
+        
+        .history-date {
+            color: #7f8c9a;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Finding Your FEET</h1>
+        <p>Track your Focus, Energy, Emotions, and Time management with hourly check-ins.</p>
+        <div id="nextCheckIn" class="timer">Next check-in in: 60:00</div>
+        <button id="permissionButton">Allow Notifications</button>
+        <button id="startButton" style="display: none;">Start Hourly Reminders</button>
+        <button id="stopButton">Stop Reminders</button>
+
+        <form id="checkInForm">
+            <div class="form-group">
+                <label for="focus">Longest Focus Period (minutes without 5+ min distractions):</label>
+                <input type="number" id="focus" min="0" placeholder="Minutes" required>
+                <span class="rating-label">minutes</span>
+            </div>
+
+            <div class="form-group">
+                <label for="energy">Energy Level (0-10):</label>
+                <input type="number" id="energy" min="0" max="10" required>
+                <span class="rating-label">/10</span>
+            </div>
+
+            <div class="form-group">
+                <label for="emotion">How are you feeling?</label>
+                <input type="text" id="emotion" placeholder="Enter your emotion(s)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="time">Time spent on current task:</label>
+                <div class="time-inputs">
+                    <input type="number" id="timeHours" min="0" placeholder="Hours" required>
+                    <span class="rating-label">hrs</span>
+                    <input type="number" id="timeMinutes" min="0" max="59" placeholder="Minutes" required>
+                    <span class="rating-label">mins</span>
+                </div>
+            </div>
+
+            <button type="submit" style="background-color: #2196F3">Submit Check-in</button>
+        </form>
+    </div>
+
+    <script>
+        let timerId = null;
+        let countdownTimer = null;
+        const permissionButton = document.getElementById('permissionButton');
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const checkInForm = document.getElementById('checkInForm');
+        const nextCheckInDiv = document.getElementById('nextCheckIn');
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const nextCheckIn = new Date(localStorage.getItem('nextCheckInTime'));
+            const timeLeft = nextCheckIn - now;
+
+            if (timeLeft <= 0) {
+                nextCheckInDiv.textContent = 'Check-in now!';
+                return;
+            }
+
+            const minutes = Math.floor(timeLeft / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            nextCheckInDiv.textContent = `Next check-in in: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Check if notification permission is already granted
+        if (Notification.permission === 'granted') {
+            permissionButton.style.display = 'none';
+            startButton.style.display = 'block';
+        }
+
+        permissionButton.addEventListener('click', async () => {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                permissionButton.style.display = 'none';
+                startButton.style.display = 'block';
+            }
+        });
+
+        startButton.addEventListener('click', () => {
+            // Show check-in form immediately
+            checkInForm.style.display = 'block';
+
+            // Set next check-in time
+            const nextCheckIn = new Date();
+            nextCheckIn.setHours(nextCheckIn.getHours() + 1);
+            localStorage.setItem('nextCheckInTime', nextCheckIn.toISOString());
+
+            // Start countdown timer
+            countdownTimer = setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            // Set up hourly notifications
+            timerId = setInterval(() => {
+                new Notification('Finding Your FEET', {
+                    body: 'Time to check your Focus, Energy, Emotions, and Time management!'
+                });
+                checkInForm.style.display = 'block';
+                
+                // Update next check-in time
+                const nextCheckIn = new Date();
+                nextCheckIn.setHours(nextCheckIn.getHours() + 1);
+                localStorage.setItem('nextCheckInTime', nextCheckIn.toISOString());
+            }, 60 * 60 * 1000); // 60 minutes in milliseconds
+
+            startButton.style.display = 'none';
+            stopButton.style.display = 'block';
+        });
+
+        stopButton.addEventListener('click', () => {
+            if (timerId) {
+                clearInterval(timerId);
+                clearInterval(countdownTimer);
+                timerId = null;
+                countdownTimer = null;
+            }
+            stopButton.style.display = 'none';
+            startButton.style.display = 'block';
+            checkInForm.style.display = 'none';
+            nextCheckInDiv.textContent = 'Timer stopped';
+        });
+
+        function saveCheckIn(checkInData) {
+            // Get existing check-ins from localStorage
+            const existingData = JSON.parse(localStorage.getItem('checkIns') || '[]');
+            
+            // Add new check-in to the array
+            existingData.push(checkInData);
+            
+            // Save back to localStorage
+            localStorage.setItem('checkIns', JSON.stringify(existingData));
+        }
+
+        function addHistorySection() {
+            const container = document.querySelector('.container');
+            
+            const historyButton = document.createElement('button');
+            historyButton.textContent = 'View History';
+            historyButton.className = 'history-button';
+            historyButton.style.marginTop = '1rem';
+            
+            const historyDiv = document.createElement('div');
+            historyDiv.className = 'history';
+            historyDiv.style.display = 'none';
+            
+            historyButton.addEventListener('click', () => {
+                const checkIns = JSON.parse(localStorage.getItem('checkIns') || '[]');
+                historyDiv.style.display = historyDiv.style.display === 'none' ? 'block' : 'none';
+                
+                historyDiv.innerHTML = checkIns.map(checkIn => `
+                    <div class="history-item">
+                        <div class="history-date">${new Date(checkIn.timestamp).toLocaleString()}</div>
+                        <div>Focus: ${checkIn.focusMinutes} minutes</div>
+                        <div>Energy: ${checkIn.energy}/10</div>
+                        <div>Emotion: ${checkIn.emotion}</div>
+                        <div>Time on task: ${checkIn.timeSpent}</div>
+                    </div>
+                `).join('');
+            });
+            
+            container.appendChild(historyButton);
+            container.appendChild(historyDiv);
+        }
+
+        checkInForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const checkInData = {
+                timestamp: new Date(),
+                focusMinutes: document.getElementById('focus').value,
+                energy: document.getElementById('energy').value,
+                emotion: document.getElementById('emotion').value,
+                timeSpent: `${document.getElementById('timeHours').value || 0}:${document.getElementById('timeMinutes').value || 0}`,
+                userId: 'user123' // You'd need proper user authentication
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/checkin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(checkInData)
+                });
+
+                if (response.ok) {
+                    checkInForm.reset();
+                    alert('Check-in saved successfully!');
+                } else {
+                    alert('Failed to save check-in');
+                }
+            } catch (error) {
+                alert('Error saving check-in');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html> 
